@@ -1,5 +1,5 @@
 from playwright.sync_api import sync_playwright, Page
-
+import src.extract_data
 
 class BankCorp:
     def __init__(self, page: Page):
@@ -24,7 +24,7 @@ class BankCorp:
             password_field.click()
             password_field.fill(password)
         except Exception as e:
-            print("\nOccured and Error in bank_corp: {e}")
+            print(f"\nOccured and Error in bank_corp: {e}")
         
         try:
             enter_btn= self.page.get_by_role("button", name="ENTRAR")
@@ -33,10 +33,34 @@ class BankCorp:
             print(f"\nOccured and Error in bank_corp: {e}")
 
 
-    def register_transactions(self, account_number: str, customer_name: str, amount: int, transfer_type: str):
+    def register_transactions(self, transactions: list[dict]):
         """
         Transfer type options: SEPA, MB WAY, SISB, SWIFT
         """
-        pass
+
+        for transaction in transactions:
+            try:
+                account_field= self.page.get_by_role("textbox", name="Número da Conta")
+                account_field.click()
+                account_field.fill(transaction['account_number'])
+
+                customer_field=self.page.get_by_role("textbox", name="Nome do Favorecido")
+                customer_field.click()
+                customer_field.fill(transaction['customer_name'])
+
+                amount_field= self.page.get_by_placeholder("Valor (€)")
+                amount_field.click()
+                amount_field.fill(str(transaction['amount']))
+
+
+                transaction_type= self.page.locator("#tipo")
+                transaction_type.select_option(transaction['transaction_type'])
+
+                register_btn= self.page.get_by_role("button", name="Adicionar")
+                register_btn.click()
+
+
+            except Exception as e:
+                print(f"\n Error: {e}")
 
         

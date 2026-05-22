@@ -6,7 +6,7 @@ def extract_csv_data(filepath: str) -> list[dict]:
 
     df= df.rename(columns={
         "Número da Conta": "account_number",
-        "Nome do Favorecido": "customer_number",
+        "Nome do Favorecido": "customer_name",
         "Valor (€)": "amount",
         "Tipo": "transaction_type"
     })
